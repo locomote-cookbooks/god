@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# God
+#
+# description: start, stop, restart God (bet you feel powerful)
+#
+
+RETVAL=0
+GOD_BIN="/usr/local/rvm/bin/bootup_god"
+
+case "$1" in
+    start)
+      $GOD_BIN -P /var/run/god.pid -l /var/log/god.log
+      $GOD_BIN load /etc/god.conf
+      RETVAL=$?
+      ;;
+    stop)
+      kill `cat /var/run/god.pid`
+      RETVAL=$?
+      ;;
+    restart)
+      kill `cat /var/run/god.pid`
+      $GOD_BIN -P /var/run/god.pid -l /var/log/god.log
+      $GOD_BIN load /etc/god.conf
+      RETVAL=$?
+      ;;
+    status)
+      $GOD_BIN status
+      RETVAL=$?
+      ;;
+    *)
+      echo "Usage: god {start|stop|restart|status}"
+      exit 1
+  ;;
+esac
+
+exit $RETVAL
+
+# chkconfig: 345 99 50
